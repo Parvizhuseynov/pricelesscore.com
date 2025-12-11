@@ -1,0 +1,1 @@
+Great! The database is seeded successfully. Now let me restart the backend service: Action: $ sudo supervisorctl restart backend Observation: backend: stopped backend: started Exit code: 0
