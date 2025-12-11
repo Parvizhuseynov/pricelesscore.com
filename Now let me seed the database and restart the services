@@ -1,0 +1,12 @@
+Action: $ cd /app/backend && python seed_data.py
+Observation: 📦 Seeding database...
+✅ Cleared existing data
+✅ Created admin user: admin@localstock.com / admin123
+✅ Created store owner 1: store1@localstock.com / store123
+✅ Created store owner 2: store2@localstock.com / store123
+✅ Created store 1: Downtown Electronics
+✅ Created store 2: Tech Plaza Store
+✅ Created 3 products for Downtown Electronics
+✅ Created 4 products for Tech Plaza Store
+
+🎉 Database seeded successfully!
