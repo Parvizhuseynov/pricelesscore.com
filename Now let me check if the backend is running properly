@@ -1,0 +1,22 @@
+Action: $ sleep 3 && tail -n 50 /var/log/supervisor/backend.*.log | grep -E "(ERROR|INFO|started|Uvicorn)" | tail -20
+Observation: INFO:     10.64.129.122:58940 - "OPTIONS /api/auth/register HTTP/1.1" 200 OK
+INFO:     10.64.129.121:34186 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     10.64.135.205:47174 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     10.64.129.122:58940 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     10.64.129.121:34186 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.135.205:47174 - "OPTIONS /api/stores HTTP/1.1" 200 OK
+INFO:     10.64.129.122:58940 - "OPTIONS /api/stats HTTP/1.1" 200 OK
+INFO:     10.64.135.205:47184 - "OPTIONS /api/products HTTP/1.1" 200 OK
+INFO:     10.64.129.121:34186 - "OPTIONS /api/products HTTP/1.1" 200 OK
+INFO:     10.64.129.122:58946 - "OPTIONS /api/stats HTTP/1.1" 200 OK
+INFO:     10.64.129.122:58950 - "OPTIONS /api/stores HTTP/1.1" 200 OK
+INFO:     10.64.135.205:47184 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.129.121:34186 - "GET /api/stats HTTP/1.1" 200 OK
+INFO:     10.64.129.122:58946 - "GET /api/stores HTTP/1.1" 200 OK
+INFO:     10.64.135.205:47184 - "GET /api/products HTTP/1.1" 200 OK
+INFO:     10.64.129.121:34186 - "GET /api/stats HTTP/1.1" 200 OK
+INFO:     10.64.135.205:47184 - "GET /api/stores HTTP/1.1" 200 OK
+INFO:     10.64.129.121:34188 - "GET /api/products HTTP/1.1" 200 OK
+INFO:     10.64.129.122:58946 - "GET /api/stores HTTP/1.1" 200 OK
+INFO:     10.64.129.121:34188 - "GET /api/stores HTTP/1.1" 200 OK
+Exit code: 0
