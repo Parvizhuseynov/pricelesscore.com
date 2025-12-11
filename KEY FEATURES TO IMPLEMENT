@@ -1,0 +1,9 @@
+1. Auth system (JWT + refresh tokens, roles: admin, store_owner)
+2. Store owner registration & profile creation
+3. Product management (CRUD with multiple images)
+4. Stock management & "Mark as Sold" functionality
+5. Real-time WebSocket notifications
+6. Reseller admin dashboard (consolidated view, per-store inventory)
+7. Webhook endpoint for marketplace integrations
+8. Audit logging for all stock changes
+9. Basic messaging between reseller and store owners
