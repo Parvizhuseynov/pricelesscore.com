@@ -1,22 +1,58 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="tr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>pricelesscore.com</title>
-  <style>
-    body{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f7fafc;color:#111;margin:0;padding:40px}
-    .wrap{max-width:900px;margin:0 auto;background:white;padding:30px;border-radius:10px;box-shadow:0 6px 30px rgba(10,20,30,0.06)}
-    h1{margin:0 0 8px;font-size:28px}
-    p{margin:8px 0 0;color:#444}
-    footer{margin-top:20px;font-size:13px;color:#777}
-  </style>
+  <title>Visit Again — Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="wrap">
-    <h1>pricelesscore.com — Yayında (Test Sayfası)</h1>
-    <p>Bu sayfa GitHub Pages ile yayınlanacak. Her şey doğru bağlandıysa kısa süre içinde buradan erişilebilecek.</p>
-    <footer>İlk kurulum testi — sonraki adımlarda özel içerik yüklenecek.</footer>
-  </div>
+  <aside class="sidebar">
+    <div class="brand">Visit <span>Again</span></div>
+    <nav>
+      <ul>
+        <li class="active">Dashboard</li>
+        <li>Ürünler</li>
+        <li>Siparişler</li>
+        <li>Raporlar</li>
+        <li>Ayarlar</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="search">
+        <input id="searchInput" placeholder="Ara..." />
+      </div>
+      <div class="profile">
+        <div class="user">Merhaba, <strong>Sen</strong></div>
+      </div>
+    </header>
+
+    <section class="content">
+      <h1>Genel Bakış</h1>
+
+      <div class="metrics" id="metrics"></div>
+
+      <div class="layout">
+        <div class="panel">
+          <h3>Satış Grafiği</h3>
+          <div id="chart" class="chart"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Son Eklenen Ürünler</h3>
+          <ul id="latestProducts" class="list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © <span id="year"></span> Visit Again
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
