@@ -1,0 +1,16 @@
+- users: email, password_hash, role, name, created_at
+- stores: owner_id, name, location, contact, created_at
+- products: store_id, sku, title, description, brand, size_variant, condition, quantity, price, barcode, created_at, updated_at
+- product_images: product_id, image_url, thumbnail_url, is_primary
+- notifications: user_id, type, title, message, read, created_at
+- audit_logs: user_id, action, entity_type, entity_id, changes, timestamp
+- messages: from_user_id, to_user_id, subject, body, read, created_at
+
+IMPLEMENTATION APPROACH:
+1. View current structure
+2. Install dependencies (python-socketio, python-multipart, Pillow, PyJWT)
+3. Create complete backend with all endpoints
+4. Create complete frontend with all pages
+5. Setup Docker Compose
+6. Create seed data
+7. Test the system
