@@ -1,0 +1,1 @@
+Perfect! Backend is running. Now let me test a quick API call: Action: $ curl -s ${REACT_APP_BACKEND_URL}/api/stats 2>&1 | head -20 Observation: Exit code: 0
