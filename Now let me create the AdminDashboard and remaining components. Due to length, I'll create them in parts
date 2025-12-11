@@ -1,0 +1,217 @@
+Now let me create the AdminDashboard and remaining components. Due to length, I'll create them in parts:
+Action: file_editor create /app/frontend/src/pages/AdminDashboard.js --file-text "import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { Button } from '../components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Input } from '../components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { Shield, Store, Package, LogOut, Bell, Search, Filter } from 'lucide-react';
+import { toast } from 'sonner';
+import axios from 'axios';
+import ProductList from '../components/ProductList';
+import ConsolidatedInventory from '../components/ConsolidatedInventory';
+import StoresList from '../components/StoresList';
+import AuditLogsList from '../components/AuditLogsList';
+import NotificationsPanel from '../components/NotificationsPanel';
+
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
+export default function AdminDashboard() {
+  const [stores, setStores] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [stats, setStats] = useState({ total_stores: 0, total_products: 0, total_quantity: 0 });
+  const [loading, setLoading] = useState(true);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [filters, setFilters] = useState({
+    store: '',
+    sku: '',
+    brand: ''
+  });
+  const { user, logout, getAuthHeaders } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [storesRes, productsRes, statsRes] = await Promise.all([
+        axios.get(`${API_URL}/stores`, getAuthHeaders()),
+        axios.get(`${API_URL}/products`, getAuthHeaders()),
+        axios.get(`${API_URL}/stats`, getAuthHeaders())
+      ]);
+
+      setStores(storesRes.data);
+      setProducts(productsRes.data);
+      setStats(statsRes.data);
+    } catch (error) {
+      toast.error('Failed to load data');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    toast.success('Logged out successfully');
+  };
+
+  const filteredProducts = products.filter(product => {
+    if (filters.store && product.store_id !== filters.store) return false;
+    if (filters.sku && !product.sku.toLowerCase().includes(filters.sku.toLowerCase())) return false;
+    if (filters.brand && !product.brand.toLowerCase().includes(filters.brand.toLowerCase())) return false;
+    return true;
+  });
+
+  if (loading) {
+    return <div className=\"flex items-center justify-center min-h-screen\">Loading...</div>;
+  }
+
+  return (
+    <div className=\"min-h-screen bg-gray-50\">
+      {/* Header */}
+      <header className=\"bg-gradient-to-r from-blue-600 to-indigo-600 text-white sticky top-0 z-40 shadow-lg\">
+        <div className=\"container mx-auto px-4 py-4\">
+          <div className=\"flex justify-between items-center\">
+            <div className=\"flex items-center gap-3\">
+              <div className=\"w-10 h-10 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center\">
+                <Shield className=\"w-6 h-6\" />
+              </div>
+              <div>
+                <h1 className=\"text-xl font-bold\" style={{ fontFamily: 'Space Grotesk' }}>Admin Dashboard</h1>
+                <p className=\"text-sm text-blue-100\">{user?.name}</p>
+              </div>
+            </div>
+            <div className=\"flex gap-2\">
+              <Button variant=\"ghost\" size=\"icon\" onClick={() => setShowNotifications(!showNotifications)} className=\"text-white hover:bg-white/20\" data-testid=\"admin-notifications-btn\">
+                <Bell className=\"w-5 h-5\" />
+              </Button>
+              <Button variant=\"outline\" onClick={handleLogout} className=\"border-white/30 text-white hover:bg-white/20\" data-testid=\"admin-logout-btn\">
+                <LogOut className=\"w-4 h-4 mr-2\" />
+                Logout
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className=\"container mx-auto px-4 py-8\">
+        {/* Stats */}
+        <div className=\"grid md:grid-cols-3 gap-6 mb-8\">
+          <Card data-testid=\"admin-stores-stat\">
+            <CardHeader>
+              <CardTitle className=\"text-lg flex items-center gap-2\">
+                <Store className=\"w-5 h-5 text-blue-600\" />
+                Total Stores
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className=\"text-4xl font-bold text-blue-600\">{stats.total_stores}</p>
+            </CardContent>
+          </Card>
+          <Card data-testid=\"admin-products-stat\">
+            <CardHeader>
+              <CardTitle className=\"text-lg flex items-center gap-2\">
+                <Package className=\"w-5 h-5 text-green-600\" />
+                Total Products
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className=\"text-4xl font-bold text-green-600\">{stats.total_products}</p>
+            </CardContent>
+          </Card>
+          <Card data-testid=\"admin-quantity-stat\">
+            <CardHeader>
+              <CardTitle className=\"text-lg\">Total Units in Stock</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className=\"text-4xl font-bold text-purple-600\">{stats.total_quantity}</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue=\"inventory\" className=\"space-y-6\" data-testid=\"admin-tabs\">
+          <TabsList className=\"bg-white border\">
+            <TabsTrigger value=\"inventory\" data-testid=\"inventory-tab\">All Inventory</TabsTrigger>
+            <TabsTrigger value=\"consolidated\" data-testid=\"consolidated-tab\">Consolidated View</TabsTrigger>
+            <TabsTrigger value=\"stores\" data-testid=\"stores-tab\">Stores</TabsTrigger>
+            <TabsTrigger value=\"audit\" data-testid=\"audit-tab\">Audit Logs</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value=\"inventory\" className=\"space-y-6\">
+            <Card>
+              <CardHeader>
+                <div className=\"flex flex-col sm:flex-row gap-4 justify-between\">
+                  <div>
+                    <CardTitle>All Products Inventory</CardTitle>
+                    <CardDescription>View and manage inventory across all stores</CardDescription>
+                  </div>
+                  <div className=\"flex gap-2\">
+                    <Select value={filters.store} onValueChange={(val) => setFilters({...filters, store: val})}>
+                      <SelectTrigger className=\"w-[180px]\" data-testid=\"filter-store\">
+                        <SelectValue placeholder=\"Filter by store\" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value=\"\">All Stores</SelectItem>
+                        {stores.map(store => (
+                          <SelectItem key={store.id} value={store.id}>{store.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className=\"mb-4 flex gap-2\">
+                  <Input
+                    placeholder=\"Search by SKU...\"
+                    value={filters.sku}
+                    onChange={(e) => setFilters({...filters, sku: e.target.value})}
+                    className=\"max-w-xs\"
+                    data-testid=\"search-sku-input\"
+                  />
+                  <Input
+                    placeholder=\"Search by brand...\"
+                    value={filters.brand}
+                    onChange={(e) => setFilters({...filters, brand: e.target.value})}
+                    className=\"max-w-xs\"
+                    data-testid=\"search-brand-input\"
+                  />
+                </div>
+                <ProductList products={filteredProducts} onRefresh={loadData} isStoreOwner={false} stores={stores} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value=\"consolidated\">
+            <ConsolidatedInventory />
+          </TabsContent>
+
+          <TabsContent value=\"stores\">
+            <StoresList stores={stores} onRefresh={loadData} />
+          </TabsContent>
+
+          <TabsContent value=\"audit\">
+            <AuditLogsList />
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Notifications Panel */}
+      {showNotifications && (
+        <NotificationsPanel
+          open={showNotifications}
+          onClose={() => setShowNotifications(false)}
+        />
+      )}
+    </div>
+  );
+}
+"
+Observation: Create successful: /app/frontend/src/pages/AdminDashboard.js
